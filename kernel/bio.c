@@ -96,7 +96,7 @@ bread(uint dev, uint blockno)
 
   b = bget(dev, blockno);
   if(!b->valid) {
-    virtio_disk_rw(b, 0);
+    virtio_disk_rw(b, 0); //没缓存到，直接从磁盘读
     b->valid = 1;
   }
   return b;
@@ -125,6 +125,7 @@ brelse(struct buf *b)
   b->refcnt--;
   if (b->refcnt == 0) {
     // no one is waiting for it.
+    // 插入到链表头
     b->next->prev = b->prev;
     b->prev->next = b->next;
     b->next = bcache.head.next;

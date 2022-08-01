@@ -1,6 +1,7 @@
 struct buf {
+  int flags;
   int valid;   // has data been read from disk?
-  int disk;    // does disk "own" buf?
+  int disk;    // does disk "own" buf?, 一致性
   uint dev;
   uint blockno;
   struct sleeplock lock;
@@ -10,3 +11,7 @@ struct buf {
   uchar data[BSIZE];
 };
 
+
+#define B_BUSY 0x1
+#define B_VALID 0x2
+#define B_DIRTY 0x4
